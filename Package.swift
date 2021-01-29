@@ -28,7 +28,8 @@ import PackageDescription
 let package = Package(
     name: "NextLevelSessionExporter",
     platforms: [
-      .iOS(.v10)
+      .iOS(.v10),
+      .macOS("10.15")
     ],
     products: [
       .library(name: "NextLevelSessionExporter", targets: ["SessionExporter"])

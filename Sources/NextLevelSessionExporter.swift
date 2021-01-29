@@ -155,7 +155,11 @@ open class NextLevelSessionExporter: NSObject {
     }
     
     public override init() {
-        self._inputQueue = DispatchQueue(label: InputQueueLabel, autoreleaseFrequency: .workItem, target: DispatchQueue.global())
+        if #available(macOS 10.13, *) {
+            self._inputQueue = DispatchQueue(label: InputQueueLabel, autoreleaseFrequency: .workItem, target: DispatchQueue.global())
+        } else {
+            self._inputQueue = DispatchQueue(label: InputQueueLabel, autoreleaseFrequency: .inherit, target: DispatchQueue.global())
+        }
         self.timeRange = CMTimeRange(start: CMTime.zero, end: CMTime.positiveInfinity)
         super.init()
     }
@@ -258,7 +262,7 @@ extension NextLevelSessionExporter {
         
         if self.videoOutputConfiguration?.keys.contains(AVVideoCodecKey) == false {
             print("NextLevelSessionExporter, warning a video output configuration codec wasn't specified")
-            if #available(iOS 11.0, *) {
+            if #available(iOS 11.0, macOS 10.13, *) {
                 self.videoOutputConfiguration?[AVVideoCodecKey] = AVVideoCodecType.h264
             } else {
                 self.videoOutputConfiguration?[AVVideoCodecKey] = AVVideoCodecH264
